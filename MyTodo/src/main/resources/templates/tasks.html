@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Todo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main class="page">
+        <section class="card">
+            <h1>My Todo</h1>
+            <p class="subtitle">Add a task, mark it complete, or delete it.</p>
+
+            <form class="add-form" th:action="@{/tasks}" method="post">
+                <input type="text" name="title" placeholder="Add a task..." required>
+                <button class="btn-add" type="submit">Add</button>
+            </form>
+
+            <p class="empty" th:if="${#lists.isEmpty(tasks)}">No tasks yet. Add one above.</p>
+
+            <div class="task-list">
+                <div class="task"
+                     th:each="task : ${tasks}"
+                     th:classappend="${task.completed} ? ' completed'">
+                    <span class="task-title" th:text="${task.title}"></span>
+                    <div class="task-actions">
+                        <form th:action="@{/tasks/toggle/{id}(id=${task.id})}" method="post">
+                            <button class="btn-toggle" type="submit"
+                                    th:text="${task.completed} ? 'Undo' : 'Complete'"></button>
+                        </form>
+                        <form th:action="@{/tasks/delete/{id}(id=${task.id})}" method="post">
+                            <button class="btn-delete" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
